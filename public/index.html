@@ -15,6 +15,16 @@ html, body {
   width: calc(100vh * 2);
   margin-left: calc(50vw - 100vh);
 }
+.ika {
+  position: absolute;
+  top: 60%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  height: 20%;
+  z-index: 3;
+}
 </style>
 <script>
 function onload_image1()
@@ -38,5 +48,6 @@ function onload_image2()
 <body>
 <img class="view" id="image1" onload="onload_image1();" src="image.jpg">
 <img class="view" id="image2" onload="onload_image2();">
+<img class="ika" src="nc113873.png">
 </body>
 </html>
