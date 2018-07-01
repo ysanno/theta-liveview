@@ -1,0 +1,42 @@
+<html>
+<head>
+<style>
+html, body {
+  overflow: hidden;
+}
+.view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  height: 100vh;
+  width: calc(100vh * 2);
+  margin-left: calc(50vw - 100vh);
+}
+</style>
+<script>
+function onload_image1()
+{
+  var image1 = document.getElementById("image1");
+  var image2 = document.getElementById("image2");
+  image1.setAttribute("style", "z-index: 2");
+  image2.setAttribute("style", "z-index: 1");
+  image2.setAttribute("src", "image.jpg?" + new Date().getTime());
+}
+function onload_image2()
+{
+  var image1 = document.getElementById("image1");
+  var image2 = document.getElementById("image2");
+  image2.setAttribute("style", "z-index: 2");
+  image1.setAttribute("style", "z-index: 1");
+  image1.setAttribute("src", "image.jpg?" + new Date().getTime());
+}
+</script>
+</head>
+<body>
+<img class="view" id="image1" onload="onload_image1();" src="image.jpg">
+<img class="view" id="image2" onload="onload_image2();">
+</body>
+</html>
