@@ -27,7 +27,7 @@ Thread.new do
       next if image[0].length == 0
       image = image[0]
       puts image.lines[2]
-      image.sub!(/^Content-Type:.*$/, '')
+      image.sub!(/^Content-(T|t)ype:.*$/, '')
       image.sub!(/^Content-Length:.*$/, '')
       image.gsub!(/\A[\r\n]*/m, '')
       image.gsub!(/[\r\n]*\Z/m, '')
