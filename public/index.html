@@ -16,27 +16,54 @@ html, body {
   margin-left: calc(50vw - 100vh);
 }
 </style>
-<script>
-function onload_image1()
-{
-  var image1 = document.getElementById("image1");
-  var image2 = document.getElementById("image2");
-  image1.setAttribute("style", "z-index: 2");
-  image2.setAttribute("style", "z-index: 1");
-  image2.setAttribute("src", "image.jpg?" + new Date().getTime());
-}
-function onload_image2()
-{
-  var image1 = document.getElementById("image1");
-  var image2 = document.getElementById("image2");
-  image2.setAttribute("style", "z-index: 2");
-  image1.setAttribute("style", "z-index: 1");
-  image1.setAttribute("src", "image.jpg?" + new Date().getTime());
-}
-</script>
 </head>
 <body>
-<img class="view" id="image1" onload="onload_image1();" src="image.jpg">
-<img class="view" id="image2" onload="onload_image2();">
+<div id="container"></div>
 </body>
+<script src="./three.min.js"></script>
+<script>
+  var camera, scene, renderer, mesh, geometry;
+  phi = 0, theta = 0;
+  init();
+
+  function init() {
+    var container;
+    container = document.getElementById( 'container' );
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 );
+    camera.lookAt(new THREE.Vector3(-1, -0.25, 0));
+    scene = new THREE.Scene();
+    geometry = new THREE.SphereBufferGeometry( 500, 60, 40 );
+    geometry.scale( - 1, 1, 1 );
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    container.appendChild( renderer.domElement );
+
+    new THREE.TextureLoader().load('image.jpg',
+      function ( texture ) {
+      var material = new THREE.MeshBasicMaterial( {
+        map: texture
+      });
+      var mesh = new THREE.Mesh( geometry, material );
+      scene.add( mesh );
+      scene.needsUpdate = true;
+      renderer.render( scene, camera );
+      animate();
+    })
+  }
+
+  function animate() {
+    requestAnimationFrame( animate );
+
+    new THREE.TextureLoader().load('image.jpg?' + new Date().getTime(),
+      function ( texture ) {
+        var material = new THREE.MeshBasicMaterial( {
+           map: texture
+        } );
+        scene.overrideMaterial = material;
+        renderer.render( scene, camera );
+      });
+  }
+</script>
 </html>
