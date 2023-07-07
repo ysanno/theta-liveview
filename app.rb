@@ -2,12 +2,32 @@ require 'sinatra'
 require 'net/http'
 require 'json'
 require 'pp'
+require 'net/http/digest_auth'
+
+HOSTNAME = ENV['THETA_HOSTNAME'] || '192.168.1.1'
+USERNAME = ENV['THETA_USERNAME'] # for client mode
+PASSWORD = ENV['THETA_PASSWORD'] # for client mode
 
 Thread.new do
-  http = Net::HTTP.new('192.168.1.1', 80)
-  pp JSON.parse(http.get('/osc/info').body)
+  http = Net::HTTP.new(HOSTNAME, 80)
+  res = http.get('/osc/info')
 
-  pp res = JSON.parse(http.post('/osc/commands/execute', {name: 'camera.startSession'}.to_json).body)
+  auth = nil
+  if res.code == '401'
+    uri = URI.parse("http://#{HOSTNAME}/osc/info")
+    uri.user = USERNAME
+    uri.password = PASSWORD
+    www_authenticate = res['www-authenticate']
+    digest_auth = Net::HTTP::DigestAuth.new
+    auth = digest_auth.auth_header(uri, www_authenticate, 'GET')
+    res = http.get(uri.path, {Authorization: auth})
+
+    uri.path = '/osc/commands/execute'
+    auth = digest_auth.auth_header(uri, www_authenticate, 'POST')
+  end
+  pp JSON.parse(res.body)
+
+  pp res = JSON.parse(http.post('/osc/commands/execute', {name: 'camera.startSession'}.to_json, {Authorization: auth}).body)
 
   if res['state'] == 'done'
     sessionId = res['results']['sessionId']
@@ -16,7 +36,7 @@ Thread.new do
   end
 
   data = ''
-  http.request_post('/osc/commands/execute', {name: 'camera.getLivePreview'}.to_json, {'Content-Type' => 'application/json'}) do |res|
+  http.request_post('/osc/commands/execute', {name: 'camera.getLivePreview'}.to_json, {'Content-Type' => 'application/json', Authorization: auth}) do |res|
     next if res.code != '200'
     puts res['content-type']
     res.read_body do |body|
