@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     mustermann (1.0.2)
+    net-http-digest_auth (1.4.1)
     rack (2.0.5)
     rack-protection (2.0.3)
       rack
@@ -16,6 +17,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  net-http-digest_auth
   sinatra
 
 BUNDLED WITH
