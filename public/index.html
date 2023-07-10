@@ -1,69 +1,78 @@
+<!DOCTYPE html>
 <html>
-<head>
-<style>
-html, body {
-  overflow: hidden;
-}
-.view {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  height: 100vh;
-  width: calc(100vh * 2);
-  margin-left: calc(50vw - 100vh);
-}
-</style>
-</head>
-<body>
-<div id="container"></div>
-</body>
-<script src="./three.min.js"></script>
-<script>
-  var camera, scene, renderer, mesh, geometry;
-  phi = 0, theta = 0;
-  init();
+  <head>
+    <title>THETA LiveView</title>
+    <style>
+      html,
+      body {
+        overflow: hidden;
+      }
+      .view {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        height: 100vh;
+        width: calc(100vh * 2);
+        margin-left: calc(50vw - 100vh);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+  </body>
+  <script src="./three.min.js"></script>
+  <script>
+    var camera, scene, renderer, mesh, geometry;
+    (phi = 0), (theta = 0);
+    init();
 
-  function init() {
-    var container;
-    container = document.getElementById( 'container' );
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 );
-    camera.lookAt(new THREE.Vector3(-1, -0.25, 0));
-    scene = new THREE.Scene();
-    geometry = new THREE.SphereBufferGeometry( 500, 60, 40 );
-    geometry.scale( - 1, 1, 1 );
+    function init() {
+      var container;
+      container = document.getElementById("container");
+      camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        1,
+        1100
+      );
+      camera.lookAt(new THREE.Vector3(-1, -0.25, 0));
+      scene = new THREE.Scene();
+      geometry = new THREE.SphereBufferGeometry(500, 60, 40);
+      geometry.scale(-1, 1, 1);
 
-    renderer = new THREE.WebGLRenderer();
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    container.appendChild( renderer.domElement );
+      renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
 
-    new THREE.TextureLoader().load('image.jpg',
-      function ( texture ) {
-      var material = new THREE.MeshBasicMaterial( {
-        map: texture
+      new THREE.TextureLoader().load("image.jpg", function (texture) {
+        var material = new THREE.MeshBasicMaterial({
+          map: texture,
+        });
+        var mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        scene.needsUpdate = true;
+        renderer.render(scene, camera);
+        animate();
       });
-      var mesh = new THREE.Mesh( geometry, material );
-      scene.add( mesh );
-      scene.needsUpdate = true;
-      renderer.render( scene, camera );
-      animate();
-    })
-  }
+    }
 
-  function animate() {
-    requestAnimationFrame( animate );
+    function animate() {
+      requestAnimationFrame(animate);
 
-    new THREE.TextureLoader().load('image.jpg?' + new Date().getTime(),
-      function ( texture ) {
-        var material = new THREE.MeshBasicMaterial( {
-           map: texture
-        } );
-        scene.overrideMaterial = material;
-        renderer.render( scene, camera );
-      });
-  }
-</script>
+      new THREE.TextureLoader().load(
+        "image.jpg?" + new Date().getTime(),
+        function (texture) {
+          var material = new THREE.MeshBasicMaterial({
+            map: texture,
+          });
+          scene.overrideMaterial = material;
+          renderer.render(scene, camera);
+        }
+      );
+    }
+  </script>
 </html>
