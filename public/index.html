@@ -157,7 +157,7 @@
     function onDocumentMouseWheel(event) {
       const fov = camera.fov + event.deltaY * 0.05;
 
-      camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
+      camera.fov = THREE.MathUtils.clamp(fov, 30, 100);
 
       camera.updateProjectionMatrix();
     }
