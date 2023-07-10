@@ -168,10 +168,6 @@
     }
 
     function update() {
-      if (isUserInteracting === false) {
-        lon += 0.1;
-      }
-
       lat = Math.max(-85, Math.min(85, lat));
       phi = THREE.MathUtils.degToRad(90 - lat);
       theta = THREE.MathUtils.degToRad(lon);
