@@ -168,17 +168,28 @@
     }
 
     function update() {
-      lat = Math.max(-85, Math.min(85, lat));
-      phi = THREE.MathUtils.degToRad(90 - lat);
-      theta = THREE.MathUtils.degToRad(lon);
+      new THREE.TextureLoader().load(
+        "image.jpg?" + new Date().getTime(),
+        function (texture) {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          var material = new THREE.MeshBasicMaterial({
+            map: texture,
+          });
+          scene.overrideMaterial = material;
 
-      const x = 500 * Math.sin(phi) * Math.cos(theta);
-      const y = 500 * Math.cos(phi);
-      const z = 500 * Math.sin(phi) * Math.sin(theta);
+          lat = Math.max(-85, Math.min(85, lat));
+          phi = THREE.MathUtils.degToRad(90 - lat);
+          theta = THREE.MathUtils.degToRad(lon);
 
-      camera.lookAt(x, y, z);
+          const x = 500 * Math.sin(phi) * Math.cos(theta);
+          const y = 500 * Math.cos(phi);
+          const z = 500 * Math.sin(phi) * Math.sin(theta);
 
-      renderer.render(scene, camera);
+          camera.lookAt(x, y, z);
+
+          renderer.render(scene, camera);
+        }
+      );
     }
   </script>
 </html>
